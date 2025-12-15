@@ -57,7 +57,7 @@ Individual sync scripts:
 
 All launchers are consolidated into a single `master.ahk` script with shared libraries. Uses Catppuccin Mocha theming and fuzzy-find filtering.
 
-**Omakase Launcher (Shift+Alt+Space)**
+**Omakase Launcher (Win+Alt+Space)**
 - Meta-launcher providing access to all AHK utilities:
   - Quick Launcher
   - Wallpaper Selector
@@ -264,7 +264,7 @@ Set-ExecutionPolicy RemoteSigned
 |--------|--------|
 | Alt+Enter | New terminal |
 | Alt+Space | Quick launcher |
-| Shift+Alt+Space | Omakase launcher (utilities menu) |
+| Win+Alt+Space | Omakase launcher (utilities menu) |
 
 ### GlazeWM
 
