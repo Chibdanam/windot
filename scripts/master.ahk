@@ -49,7 +49,7 @@ LoadThemeConfig()
 ; Keybinds
 !Enter::Run('"C:\Program Files\WezTerm\wezterm-gui.exe"')
 !Space::ToggleQuickLauncher()
-!+Space::ToggleOmakaseLauncher()
+#!Space::ToggleOmakaseLauncher()
 
 ; Keep script running with tray icon
 Persistent

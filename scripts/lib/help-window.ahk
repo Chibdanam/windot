@@ -56,30 +56,30 @@ ShowHelpWindow() {
 
     ; Title
     helpGui.SetFont("s" titleSize " Bold c" primary, font)
-    helpGui.Add("Text", "x" colLeft " y15 w280 Center", "AutoHotkey")
+    helpGui.Add("Text", "x" colLeft " y15 w320 Center", "AutoHotkey")
 
     ; Separator
-    helpGui.Add("Text", "x" colLeft " y45 w280 h1 Background" accent)
+    helpGui.Add("Text", "x" colLeft " y45 w320 h1 Background" accent)
 
     ; AutoHotkey shortcuts
     ahkShortcuts := [
-        ["Alt + Enter", "New Terminal (CWD)"],
+        ["Alt + Enter", "New Terminal"],
         ["Alt + Space", "Quick Launcher"],
-        ["Shift + Alt + Space", "Omakase Launcher"]
+        ["Win + Alt + Space", "Omakase Launcher"]
     ]
 
     yPos := 60
     for shortcut in ahkShortcuts {
         helpGui.SetFont("s" fontSize " Bold c" accent, font)
-        helpGui.Add("Text", "x" colLeft " y" yPos " w130", shortcut[1])
+        helpGui.Add("Text", "x" colLeft " y" yPos " w150", shortcut[1])
         helpGui.SetFont("s" fontSize " c" txt, font)
-        helpGui.Add("Text", "x" (colLeft + 130) " y" yPos " w150", shortcut[2])
+        helpGui.Add("Text", "x" (colLeft + 150) " y" yPos " w170", shortcut[2])
         yPos += 22
     }
 
     ; Separator
     yPos += 10
-    helpGui.Add("Text", "x" colLeft " y" yPos " w280 h1 Background" accent)
+    helpGui.Add("Text", "x" colLeft " y" yPos " w320 h1 Background" accent)
 
     ; Amphetamine status
     yPos += 15
@@ -92,7 +92,7 @@ ShowHelpWindow() {
     helpGui.Add("Text", "x" (colLeft + 130) " y" yPos " w60", ampStatus)
 
     ; ============ RIGHT COLUMN - GlazeWM ============
-    colRight := 330
+    colRight := 370
 
     ; Title
     helpGui.SetFont("s" titleSize " Bold c" primary, font)
