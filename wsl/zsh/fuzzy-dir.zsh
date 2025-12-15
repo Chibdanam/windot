@@ -80,7 +80,7 @@ ff() {
         -path "*/.sass-cache" -o \
         -path "*/.docker" \
     \) -prune -o -type f -print | \
-    fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' --bind 'ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up')
+    fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' --bind 'ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up')
     if [ -n "$file" ]; then
         nvim "$file"
     fi

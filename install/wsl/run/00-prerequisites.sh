@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install prerequisites: Homebrew, Go, Rust
+# Install prerequisites: yay, mise, Go, Rust
 
 set -e
 
@@ -13,14 +13,24 @@ is_installed() {
 
 echo "Installing prerequisites..."
 
-# Homebrew
-if is_installed brew; then
-    echo -e "${YELLOW}[SKIP]${NC} Homebrew already installed"
+# Update system first
+echo -e "${GREEN}[UPDATE]${NC} Updating system packages"
+sudo pacman -Syu --noconfirm
+
+# Base development tools
+if pacman -Qi base-devel &> /dev/null; then
+    echo -e "${YELLOW}[SKIP]${NC} base-devel already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} Homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    # Add to PATH for current session
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    echo -e "${GREEN}[INSTALL]${NC} base-devel"
+    sudo pacman -Syu --noconfirm --needed base-devel
+fi
+
+# git
+if is_installed git; then
+    echo -e "${YELLOW}[SKIP]${NC} git already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} git"
+    sudo pacman -Syu --noconfirm git
 fi
 
 # Go
@@ -28,8 +38,7 @@ if is_installed go; then
     echo -e "${YELLOW}[SKIP]${NC} Go already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} Go"
-    sudo apt update
-    sudo apt install -y golang-go
+    sudo pacman -Syu --noconfirm go
 fi
 
 # Rust
@@ -37,9 +46,28 @@ if is_installed cargo; then
     echo -e "${YELLOW}[SKIP]${NC} Rust already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} Rust"
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    # Add to PATH for current session
-    source "$HOME/.cargo/env"
+    sudo pacman -Syu --noconfirm rust
+fi
+
+# yay
+if is_installed yay; then
+    echo -e "${YELLOW}[SKIP]${NC} yay already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} yay"
+    cd /tmp
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd -
+    rm -rf /tmp/yay
+fi
+
+# mise
+if is_installed mise; then
+    echo -e "${YELLOW}[SKIP]${NC} mise already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} mise"
+    yay -Syu --noconfirm mise
 fi
 
 echo "Prerequisites installation complete!"

@@ -16,9 +16,9 @@ echo "Syncing dotfiles to $HOME_DIR..."
 cp "$SCRIPT_DIR/.gitconfig" "$HOME_DIR/.gitconfig"
 echo "  - .gitconfig"
 
-mkdir -p "$HOME_DIR/.config/ohmyposh"
-cp "$SCRIPT_DIR/ohmyposh/"* "$HOME_DIR/.config/ohmyposh/"
-echo "  - ohmyposh config"
+mkdir -p "$HOME_DIR/.config/starship"
+cp "$SCRIPT_DIR/starship/"* "$HOME_DIR/.config/"
+echo "  - starship config"
 
 # Theme helper scripts
 DOTFILES_DIR="$HOME_DIR/.config/dotfiles"

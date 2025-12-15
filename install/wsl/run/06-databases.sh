@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install database tools: postgresql-client
+# Install database tools: postgresql-libs (client)
 
 set -e
 
@@ -13,13 +13,12 @@ is_installed() {
 
 echo "Installing database tools..."
 
-# postgresql-client
+# postgresql (client tools)
 if is_installed psql; then
-    echo -e "${YELLOW}[SKIP]${NC} postgresql-client already installed"
+    echo -e "${YELLOW}[SKIP]${NC} postgresql already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} postgresql-client"
-    sudo apt update
-    sudo apt install -y postgresql-client
+    echo -e "${GREEN}[INSTALL]${NC} postgresql (client)"
+    yay -Syu --noconfirm postgresql-libs
 fi
 
 echo "Database tools installation complete!"

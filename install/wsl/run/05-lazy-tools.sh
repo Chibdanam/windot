@@ -11,12 +11,6 @@ is_installed() {
     command -v "$1" &> /dev/null
 }
 
-# Ensure Go bin is in PATH
-export PATH="$PATH:$(go env GOPATH)/bin"
-
-# Ensure Homebrew is in PATH
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true
-
 echo "Installing lazy tools..."
 
 # lazydocker
@@ -24,7 +18,7 @@ if is_installed lazydocker; then
     echo -e "${YELLOW}[SKIP]${NC} lazydocker already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} lazydocker"
-    go install github.com/jesseduffield/lazydocker@latest
+    yay -Syu --noconfirm lazydocker
 fi
 
 # lazygit
@@ -32,23 +26,23 @@ if is_installed lazygit; then
     echo -e "${YELLOW}[SKIP]${NC} lazygit already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} lazygit"
-    go install github.com/jesseduffield/lazygit@latest
+    yay -Syu --noconfirm lazygit
 fi
 
-# lazysql (via brew)
+# lazysql
 if is_installed lazysql; then
     echo -e "${YELLOW}[SKIP]${NC} lazysql already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} lazysql"
-    brew install lazysql
+    yay -Syu --noconfirm lazysql
 fi
 
-# yazi (via brew)
+# yazi
 if is_installed yazi; then
     echo -e "${YELLOW}[SKIP]${NC} yazi already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} yazi"
-    brew install yazi
+    yay -Syu --noconfirm yazi
 fi
 
 echo "Lazy tools installation complete!"
