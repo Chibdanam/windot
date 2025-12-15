@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install dev core: cmake, build-essential, python, docker, neovim, mingw-w64, libx11-dev
+# Install dev core: cmake, python, docker, neovim, mingw-w64, libx11
 
 set -e
 
@@ -18,24 +18,15 @@ if is_installed cmake; then
     echo -e "${YELLOW}[SKIP]${NC} cmake already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} cmake"
-    sudo apt update
-    sudo apt install -y cmake
-fi
-
-# build-essential (g++, gcc, make)
-if is_installed g++; then
-    echo -e "${YELLOW}[SKIP]${NC} build-essential already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} build-essential"
-    sudo apt install -y build-essential
+    yay -Syu --noconfirm cmake
 fi
 
 # python3 and pip
 if is_installed python3; then
-    echo -e "${YELLOW}[SKIP]${NC} python3 already installed"
+    echo -e "${YELLOW}[SKIP]${NC} python already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} python3"
-    sudo apt install -y python3 python3-pip python3-venv
+    echo -e "${GREEN}[INSTALL]${NC} python"
+    yay -Syu --noconfirm python python-pip
 fi
 
 # docker
@@ -43,40 +34,35 @@ if is_installed docker; then
     echo -e "${YELLOW}[SKIP]${NC} docker already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} docker"
-    curl -fsSL https://get.docker.com | sh
+    yay -Syu --noconfirm docker
+    sudo systemctl enable docker.service
+    sudo systemctl start docker.service
     sudo usermod -aG docker "$USER"
     echo "Note: Log out and back in for docker group to take effect"
 fi
 
-# neovim v0.11.3
+# neovim
 if is_installed nvim; then
     echo -e "${YELLOW}[SKIP]${NC} neovim already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} neovim v0.11.3"
-    curl -fLo /tmp/nvim.appimage https://github.com/neovim/neovim/releases/download/v0.11.3/nvim-linux-x86_64.appimage
-    chmod u+x /tmp/nvim.appimage
-    # Extract and install (AppImage may not work directly in WSL)
-    cd /tmp
-    ./nvim.appimage --appimage-extract
-    sudo mv squashfs-root /opt/nvim
-    sudo ln -sf /opt/nvim/AppRun /usr/local/bin/nvim
-    rm /tmp/nvim.appimage
+    echo -e "${GREEN}[INSTALL]${NC} neovim"
+    yay -Syu --noconfirm neovim
 fi
 
 # mingw-w64 (cross-compilation for Windows)
 if is_installed x86_64-w64-mingw32-gcc; then
-    echo -e "${YELLOW}[SKIP]${NC} mingw-w64 already installed"
+    echo -e "${YELLOW}[SKIP]${NC} mingw-w64-gcc already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} mingw-w64"
-    sudo apt install -y mingw-w64
+    echo -e "${GREEN}[INSTALL]${NC} mingw-w64-gcc"
+    yay -Syu --noconfirm mingw-w64-gcc
 fi
 
-# libx11-dev (X11 development libraries)
-if dpkg -s libx11-dev &> /dev/null; then
-    echo -e "${YELLOW}[SKIP]${NC} libx11-dev already installed"
+# libx11 (X11 development libraries)
+if pacman -Qi libx11 &> /dev/null; then
+    echo -e "${YELLOW}[SKIP]${NC} libx11 already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} libx11-dev"
-    sudo apt install -y libx11-dev
+    echo -e "${GREEN}[INSTALL]${NC} libx11"
+    yay -Syu --noconfirm libx11
 fi
 
 echo "Dev core tools installation complete!"

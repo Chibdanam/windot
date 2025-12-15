@@ -1,6 +1,5 @@
-export PATH="$HOME/.local/bin:/snap/bin:$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.opencode/bin:$PATH"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.opencode/bin:$PATH"
+eval "$(mise activate zsh)"
 
 # Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"

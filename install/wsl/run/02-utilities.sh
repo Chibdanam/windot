@@ -18,17 +18,15 @@ if is_installed unzip; then
     echo -e "${YELLOW}[SKIP]${NC} unzip already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} unzip"
-    sudo apt update
-    sudo apt install -y unzip
+    yay -Syu --noconfirm unzip
 fi
 
 # bat
-if is_installed bat || is_installed batcat; then
+if is_installed bat; then
     echo -e "${YELLOW}[SKIP]${NC} bat already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} bat"
-    sudo apt update
-    sudo apt install -y bat
+    yay -Syu --noconfirm bat
 fi
 
 # btop
@@ -36,7 +34,7 @@ if is_installed btop; then
     echo -e "${YELLOW}[SKIP]${NC} btop already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} btop"
-    sudo apt install -y btop
+    yay -Syu --noconfirm btop
 fi
 
 # fzf
@@ -44,7 +42,7 @@ if is_installed fzf; then
     echo -e "${YELLOW}[SKIP]${NC} fzf already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} fzf"
-    sudo apt install -y fzf
+    yay -Syu --noconfirm fzf
 fi
 
 # tldr
@@ -52,7 +50,7 @@ if is_installed tldr; then
     echo -e "${YELLOW}[SKIP]${NC} tldr already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} tldr"
-    sudo apt install -y tldr
+    yay -Syu --noconfirm tldr
 fi
 
 # eza
@@ -60,14 +58,7 @@ if is_installed eza; then
     echo -e "${YELLOW}[SKIP]${NC} eza already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} eza"
-    sudo apt install -y eza 2>/dev/null || {
-        # Fallback to cargo if apt doesn't have eza
-        if is_installed cargo; then
-            cargo install eza
-        else
-            echo "eza not available via apt and cargo not installed, skipping"
-        fi
-    }
+    yay -Syu --noconfirm eza
 fi
 
 # fastfetch
@@ -75,21 +66,15 @@ if is_installed fastfetch; then
     echo -e "${YELLOW}[SKIP]${NC} fastfetch already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} fastfetch"
-    sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch 2>/dev/null || true
-    sudo apt update
-    sudo apt install -y fastfetch
+    yay -Syu --noconfirm fastfetch
 fi
 
-# zoxide (requires cargo from prerequisites)
+# zoxide
 if is_installed zoxide; then
     echo -e "${YELLOW}[SKIP]${NC} zoxide already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} zoxide"
-    if is_installed cargo; then
-        cargo install zoxide --locked
-    else
-        echo "cargo not installed, skipping zoxide"
-    fi
+    yay -Syu --noconfirm zoxide
 fi
 
 echo "Utilities installation complete!"

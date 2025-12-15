@@ -1,19 +1,22 @@
 [alias]
   st = status
-  ck = checkout
-  lo = log
+  co = checkout
+  lg = log
+  defaultBranch = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
+  m = !git checkout $(git defaultBranch)
+
 [user]
-  name = Yannick
-  email = yannick.herrero@acelys.fr
+  name = 
+  email = 
+
 [core]
   editor = nvim
   pager = delta
   autocrlf = input
   excludesfile = ~/.gitignore
+
 [credential]
   helper = store
-[core]
-  pager = delta
 
 [interactive]
   diffFilter = delta --color-only
@@ -21,13 +24,8 @@
 [delta]
   navigate = true    # use n and N to move between diff sections
   side-by-side = true
+  line-numbers = true
 
-
-    # delta detects terminal colors automatically; set one of these to disable auto-detection
-    # dark = true
-    # light = true
-[pull]
-  rebase = false
 [merge]
   tool = nvimdiff
   conflictstyle = diff3
@@ -36,12 +34,9 @@
   colorMoved = default
   tool = nvimdiff
   guitool = nvimdiff
-[mergetool]
-  keepBackup = false
-  trustExitCode = false
-  prompt = true
-[difftool]
-  prompt = false
+
 [mergetool "nvimdiff"]
   layout = "LOCAL,BASE,REMOTE / MERGED"
 
+[init]
+  defaultBranch = main

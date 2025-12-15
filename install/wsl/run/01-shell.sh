@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install shell tools: zsh, git-delta, oh-my-posh
+# Install shell tools: zsh, git-delta, starship
 
 set -e
 
@@ -18,8 +18,15 @@ if is_installed zsh; then
     echo -e "${YELLOW}[SKIP]${NC} zsh already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} zsh"
-    sudo apt update
-    sudo apt install -y zsh
+    yay -Syu --noconfirm zsh
+fi
+
+# Set zsh as default shell
+if [ "$SHELL" = "/usr/bin/zsh" ]; then
+    echo -e "${YELLOW}[SKIP]${NC} zsh already default shell"
+else
+    echo -e "${GREEN}[CONFIG]${NC} Setting zsh as default shell"
+    chsh -s /usr/bin/zsh
 fi
 
 # git-delta
@@ -27,19 +34,15 @@ if is_installed delta; then
     echo -e "${YELLOW}[SKIP]${NC} git-delta already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} git-delta"
-    # Download latest release
-    DELTA_VERSION=$(curl -s https://api.github.com/repos/dandavison/delta/releases/latest | grep -oP '"tag_name": "\K[^"]+')
-    curl -Lo /tmp/delta.deb "https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/git-delta_${DELTA_VERSION}_amd64.deb"
-    sudo dpkg -i /tmp/delta.deb
-    rm /tmp/delta.deb
+    yay -Syu --noconfirm git-delta
 fi
 
-# oh-my-posh
-if is_installed oh-my-posh; then
-    echo -e "${YELLOW}[SKIP]${NC} oh-my-posh already installed"
+# starship
+if is_installed starship; then
+    echo -e "${YELLOW}[SKIP]${NC} starship already installed"
 else
-    echo -e "${GREEN}[INSTALL]${NC} oh-my-posh"
-    curl -s https://ohmyposh.dev/install.sh | bash -s
+    echo -e "${GREEN}[INSTALL]${NC} starship"
+    yay -Syu --noconfirm starship
 fi
 
 echo "Shell tools installation complete!"
