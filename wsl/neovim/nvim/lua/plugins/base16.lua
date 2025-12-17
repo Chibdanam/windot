@@ -21,6 +21,10 @@ return {
 
         local hl = vim.api.nvim_set_hl
 
+        -- Core editor highlights
+        hl(0, "CursorLine", { bg = c.base01 })
+        hl(0, "CursorLineNr", { fg = c.base05, bg = c.base01 })
+
         -- Dashboard highlights (muted, non-distracting)
         hl(0, "DashboardHeader", { fg = c.base04 })
         hl(0, "DashboardFooter", { fg = c.base03 })
@@ -66,11 +70,14 @@ return {
         hl(0, "TelescopePreviewTitle", { fg = c.base0D, bold = true })
       end
 
-      -- Apply highlights immediately
-      set_custom_highlights()
+      -- Apply highlights after event loop processes setup()
+      -- This ensures M.colors is fully populated before we use it
+      vim.schedule(set_custom_highlights)
 
-      -- Reapply when colorscheme changes
+      -- Reapply when colorscheme changes (use named group to prevent autocmd! interference)
+      vim.api.nvim_create_augroup("Base16CustomHighlights", { clear = true })
       vim.api.nvim_create_autocmd("ColorScheme", {
+        group = "Base16CustomHighlights",
         pattern = "*",
         callback = set_custom_highlights,
       })
