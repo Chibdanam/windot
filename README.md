@@ -119,11 +119,17 @@ Located in `standalone/firefox/` (requires manual setup):
 - Auto-hiding navbar (shows on hover)
 - Minimal tab design
 - Debloated toolbar
-- Catppuccin colors
 
 **Installation**:
-1. Enable `toolkit.legacyUserProfileCustomizations.stylesheets` in `about:config`
-2. Copy `userChrome.css` to `%APPDATA%\Mozilla\Firefox\Profiles\<profile>\chrome\`
+
+1. Enable userchrome:
+   - In `about:config` set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
+
+2. Enable compact mode:
+   - In `about:config` set `browser.compactmode.show` to `true`
+   - In the customize toolbar menu set density to compact
+
+3. Copy `userChrome.css` to the `chrome` directory in your Firefox profile. If there is no such directory, create it. If you're unsure what the path to your profile's directory is, you can find out by going to `about:profiles`.
 
 ### WSL Dotfiles
 
