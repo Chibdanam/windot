@@ -10,7 +10,6 @@ Personal Windows/WSL configuration files with automated sync scripts for a tilin
 - **Browser**: Firefox with custom userChrome.css styling
 - **Automation**: AutoHotkey v2 scripts for fuzzy-find launchers
 - **Utilities**: [PowerToys](https://github.com/microsoft/PowerToys) - Keyboard Manager remappings
-- **Customization**: [Windhawk](https://windhawk.net/) - Taskbar and Windows UI mods
 - **Editor**: Neovim with LazyVim configuration
 - **Shell**: Zsh with modular configuration
 
@@ -26,7 +25,7 @@ windot/
 ├── scripts/        # AutoHotkey launchers
 │   ├── config/     # INI configuration files
 │   └── lib/        # Shared library functions
-├── standalone/     # Manual setup configs (Firefox, Windhawk)
+├── standalone/     # Manual setup configs (Firefox)
 ├── theme/          # Wallpapers
 ├── wezterm/        # Terminal config
 └── wsl/            # WSL dotfiles (neovim, zsh)
@@ -157,7 +156,7 @@ Automated installation scripts for setting up a new machine:
   - `browsers` - Firefox, Chrome, Brave
   - `development` - VS Code, Git, WezTerm
   - `fonts` - JetBrains Mono, Cascadia Code, Nerd Fonts
-  - `system-tools` - PowerToys, UniGetUI, Windhawk, AutoHotkey
+  - `system-tools` - PowerToys, UniGetUI, AutoHotkey
   - `wsl` - WSL2 + Ubuntu
   - `window-management` - GlazeWM, Zebar
   - `settings` - Windows appearance, taskbar, explorer, privacy tweaks
@@ -180,21 +179,6 @@ Automated installation scripts for setting up a new machine:
 Configuration for Microsoft PowerToys:
 - **Keyboard Manager**: Custom key remappings
 - Sync with `powertoys/sync.sh`
-
-### Windhawk
-
-Located in `standalone/windhawk/` (requires manual setup):
-
-Custom Windows UI modifications via Windhawk mods:
-- **Taskbar Styler**: Rose Pine theme
-- **Start Menu Styler**: Down Aero theme
-- **Notification Center Styler**: Translucent Shell theme
-- **Taskbar Clock Customization**: Custom time format, RSS tooltip
-- **Taskbar Icon Size**: Smaller icons (18px)
-- **Taskbar Volume Control**: Scroll wheel volume adjustment
-- **File Explorer Remove Suffixes**: Hide file extensions
-
-**Installation**: Install mods via Windhawk GUI, then configure settings using `mods.json` as reference. See `standalone/windhawk/README.md` for details.
 
 ## Installation
 
