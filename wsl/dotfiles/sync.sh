@@ -33,6 +33,17 @@ sed "s/%WIN_USER%/$WIN_USER/g" "$SCRIPT_DIR/set-theme.sh" > "$HOME_DIR/.local/bi
 chmod +x "$HOME_DIR/.local/bin/set-theme.sh"
 echo "  - set-theme.sh"
 
+# Hook installer script
+cp "$SCRIPT_DIR/scripts/install-hooks.sh" "$HOME_DIR/.local/bin/install-hooks.sh"
+chmod +x "$HOME_DIR/.local/bin/install-hooks.sh"
+echo "  - install-hooks.sh"
+
+# Git hooks scripts
+mkdir -p "$HOME_DIR/.local/bin/git-hooks"
+cp "$SCRIPT_DIR/scripts/git-hooks/"*.sh "$HOME_DIR/.local/bin/git-hooks/"
+chmod +x "$HOME_DIR/.local/bin/git-hooks/"*.sh
+echo "  - git-hooks ($(ls -1 "$HOME_DIR/.local/bin/git-hooks/"*.sh 2>/dev/null | wc -l) hooks)"
+
 # Theme definitions (TOML files for set-theme.sh)
 THEME_DIR="$HOME_DIR/.config/themes"
 mkdir -p "$THEME_DIR"
