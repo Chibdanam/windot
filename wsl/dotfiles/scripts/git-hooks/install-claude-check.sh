@@ -15,6 +15,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+HOOK_MARKER="# CLAUDE-CHECK-HOOK"
+
 # Check if we're in a git repository
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo -e "${RED}Error: Not in a git repository${NC}"
@@ -27,9 +29,27 @@ COMMIT_MSG_HOOK_PATH="${GIT_DIR}/hooks/commit-msg"
 PRE_COMMIT_HOOK_PATH="${GIT_DIR}/hooks/pre-commit"
 
 # Check if hooks already exist
+hooks_exist=false
+our_hooks_installed=false
+
 if [ -f "$PRE_COMMIT_HOOK_PATH" ] || [ -f "$COMMIT_MSG_HOOK_PATH" ]; then
-    echo -e "${YELLOW}Warning: Claude check hooks already exist${NC}"
-    read -p "Do you want to overwrite them? (y/n) " -n 1 -r
+    hooks_exist=true
+    # Check if they're our hooks
+    if grep -q "$HOOK_MARKER" "$PRE_COMMIT_HOOK_PATH" 2>/dev/null && \
+       grep -q "$HOOK_MARKER" "$COMMIT_MSG_HOOK_PATH" 2>/dev/null; then
+        our_hooks_installed=true
+    fi
+fi
+
+# Handle existing hooks
+if [ "$hooks_exist" = true ]; then
+    if [ "$our_hooks_installed" = true ]; then
+        echo -e "${YELLOW}Claude check hooks are already installed${NC}"
+    else
+        echo -e "${YELLOW}Warning: Existing hooks found that are not Claude check hooks${NC}"
+    fi
+    
+    read -p "Do you want to overwrite them? (y/N) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         echo "Installation cancelled."
@@ -40,7 +60,7 @@ fi
 # Create the pre-commit hook (checks author info)
 cat > "$PRE_COMMIT_HOOK_PATH" << 'EOF'
 #!/bin/bash
-
+# CLAUDE-CHECK-HOOK
 # Pre-commit hook to reject commits co-authored or authored by Claude
 
 RED='\033[0;31m'
@@ -75,7 +95,7 @@ EOF
 # Create the commit-msg hook (checks commit message)
 cat > "$COMMIT_MSG_HOOK_PATH" << 'EOF'
 #!/bin/bash
-
+# CLAUDE-CHECK-HOOK
 # Commit-msg hook to reject commits mentioning Claude
 
 RED='\033[0;31m'

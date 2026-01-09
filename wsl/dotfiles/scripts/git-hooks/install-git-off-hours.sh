@@ -161,16 +161,16 @@ install_hook() {
     # Check if hook already exists
     if [[ -f "$hook_path" ]]; then
         if grep -q "$HOOK_MARKER" "$hook_path"; then
-            echo -e "${YELLOW}Hook is already installed${NC}"
-            exit 0
+            echo -e "${YELLOW}Off-hours timestamp hook is already installed${NC}"
         else
             echo -e "${YELLOW}Warning: A post-commit hook already exists${NC}"
-            read -p "Do you want to overwrite it? (y/N) " -n 1 -r
-            echo
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                echo -e "${YELLOW}Aborted${NC}"
-                exit 1
-            fi
+        fi
+        
+        read -p "Do you want to overwrite it? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}Installation cancelled${NC}"
+            exit 0
         fi
     fi
     
