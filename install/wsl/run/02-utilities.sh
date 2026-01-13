@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install utilities: bat, btop, eza, tldr, fastfetch, fzf, unzip, zoxide
+# Install utilities: bat, btop, eza, tldr, fastfetch, fzf, ripgrep, tree, unzip, zoxide
 
 set -e
 
@@ -45,6 +45,22 @@ if is_installed fzf; then
 else
     echo -e "${GREEN}[INSTALL]${NC} fzf"
     sudo apt install -y fzf
+fi
+
+# ripgrep
+if is_installed rg; then
+    echo -e "${YELLOW}[SKIP]${NC} ripgrep already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} ripgrep"
+    sudo apt install -y ripgrep
+fi
+
+# tree
+if is_installed tree; then
+    echo -e "${YELLOW}[SKIP]${NC} tree already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} tree"
+    sudo apt install -y tree
 fi
 
 # tldr
