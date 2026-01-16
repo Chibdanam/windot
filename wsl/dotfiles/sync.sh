@@ -20,6 +20,12 @@ mkdir -p "$HOME_DIR/.config/ohmyposh"
 cp "$SCRIPT_DIR/ohmyposh/"* "$HOME_DIR/.config/ohmyposh/"
 echo "  - ohmyposh config"
 
+# Mise config (symlink to keep in sync)
+MISE_CONFIG_SRC="$SCRIPT_DIR/../config/mise/config.toml"
+mkdir -p "$HOME_DIR/.config/mise"
+ln -sf "$(readlink -f "$MISE_CONFIG_SRC")" "$HOME_DIR/.config/mise/config.toml"
+echo "  - mise config"
+
 # Theme helper scripts
 DOTFILES_DIR="$HOME_DIR/.config/dotfiles"
 mkdir -p "$DOTFILES_DIR/theme-scripts"

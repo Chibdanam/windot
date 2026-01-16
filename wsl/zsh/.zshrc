@@ -1,6 +1,5 @@
-export PATH="$HOME/.local/bin:/snap/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:/snap/bin:$PATH"
 export PATH="$HOME/.opencode/bin:$PATH"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -15,7 +14,7 @@ zinit light Aloxaf/fzf-tab
 autoload -Uz compinit && compinit
 zinit cdreplay -q
 
-# Source configs
+# Source configs (includes tools.zsh which activates mise)
 for config in ~/.zsh/*.zsh; do
     source "$config"
 done
