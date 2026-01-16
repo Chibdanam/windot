@@ -1,5 +1,6 @@
 #!/bin/bash
 # Install AI tools: claude-code, opencode
+# Note: claude-code is installed via official curl script
 
 set -e
 
@@ -11,9 +12,12 @@ is_installed() {
     command -v "$1" &> /dev/null
 }
 
-# Ensure nvm is loaded
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+# Ensure mise is activated for this session
+# (node is installed via mise in 00-prerequisites.sh)
+eval "$(mise activate bash)" 2>/dev/null || {
+    echo "Warning: mise not found. Run 00-prerequisites.sh first."
+    exit 1
+}
 
 echo "Installing AI tools..."
 
@@ -22,7 +26,7 @@ if is_installed claude; then
     echo -e "${YELLOW}[SKIP]${NC} claude-code already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} claude-code"
-    npm install -g @anthropic-ai/claude-code
+    curl -fsSL https://claude.ai/install.sh | bash
 fi
 
 # opencode
