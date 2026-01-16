@@ -1,5 +1,6 @@
 #!/bin/bash
-# Install dev core: cmake, build-essential, python, docker, neovim, mingw-w64, libx11-dev
+# Install dev core: cmake, build-essential, python, docker, mingw-w64, libx11-dev
+# Note: neovim is now installed via mise in 00-prerequisites.sh
 
 set -e
 
@@ -46,21 +47,6 @@ else
     curl -fsSL https://get.docker.com | sh
     sudo usermod -aG docker "$USER"
     echo "Note: Log out and back in for docker group to take effect"
-fi
-
-# neovim v0.11.3
-if is_installed nvim; then
-    echo -e "${YELLOW}[SKIP]${NC} neovim already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} neovim v0.11.3"
-    curl -fLo /tmp/nvim.appimage https://github.com/neovim/neovim/releases/download/v0.11.3/nvim-linux-x86_64.appimage
-    chmod u+x /tmp/nvim.appimage
-    # Extract and install (AppImage may not work directly in WSL)
-    cd /tmp
-    ./nvim.appimage --appimage-extract
-    sudo mv squashfs-root /opt/nvim
-    sudo ln -sf /opt/nvim/AppRun /usr/local/bin/nvim
-    rm /tmp/nvim.appimage
 fi
 
 # mingw-w64 (cross-compilation for Windows)

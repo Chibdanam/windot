@@ -1,5 +1,6 @@
 #!/bin/bash
-# Install misc tools: ansible, xleak
+# Install misc tools: ansible, xleak, lazysql
+# Note: xleak uses cargo, lazysql uses go (both from mise)
 
 set -e
 
@@ -11,8 +12,11 @@ is_installed() {
     command -v "$1" &> /dev/null
 }
 
-# Ensure cargo is in PATH
-source "$HOME/.cargo/env" 2>/dev/null || true
+# Ensure mise is activated for this session (for cargo)
+eval "$(mise activate bash)" 2>/dev/null || {
+    echo "Warning: mise not found. Run 00-prerequisites.sh first."
+    exit 1
+}
 
 echo "Installing misc tools..."
 
@@ -25,12 +29,20 @@ else
     sudo apt install -y ansible
 fi
 
-# xleak
+# xleak (via cargo from mise)
 if is_installed xleak; then
     echo -e "${YELLOW}[SKIP]${NC} xleak already installed"
 else
     echo -e "${GREEN}[INSTALL]${NC} xleak"
     cargo install xleak
+fi
+
+# lazysql (via go from mise - not available in mise registry)
+if is_installed lazysql; then
+    echo -e "${YELLOW}[SKIP]${NC} lazysql already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} lazysql"
+    go install github.com/jorgerojas26/lazysql@latest
 fi
 
 echo "Misc tools installation complete!"

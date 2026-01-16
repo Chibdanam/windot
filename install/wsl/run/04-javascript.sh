@@ -1,5 +1,6 @@
 #!/bin/bash
-# Install JavaScript tools: nvm, node, pnpm, bun, eas-cli
+# Install JavaScript tools: eas-cli
+# Note: node, pnpm, bun are now installed via mise in 00-prerequisites.sh
 
 set -e
 
@@ -11,43 +12,13 @@ is_installed() {
     command -v "$1" &> /dev/null
 }
 
+# Ensure mise is activated for this session
+eval "$(mise activate bash)" 2>/dev/null || {
+    echo "Warning: mise not found. Run 00-prerequisites.sh first."
+    exit 1
+}
+
 echo "Installing JavaScript tools..."
-
-# nvm
-export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-    echo -e "${YELLOW}[SKIP]${NC} nvm already installed"
-    source "$NVM_DIR/nvm.sh"
-else
-    echo -e "${GREEN}[INSTALL]${NC} nvm"
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-    source "$NVM_DIR/nvm.sh"
-fi
-
-# node (LTS)
-if is_installed node; then
-    echo -e "${YELLOW}[SKIP]${NC} node already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} node (LTS)"
-    nvm install --lts
-    nvm use --lts
-fi
-
-# pnpm
-if is_installed pnpm; then
-    echo -e "${YELLOW}[SKIP]${NC} pnpm already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} pnpm"
-    curl -fsSL https://get.pnpm.io/install.sh | sh -
-fi
-
-# bun
-if is_installed bun; then
-    echo -e "${YELLOW}[SKIP]${NC} bun already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} bun"
-    curl -fsSL https://bun.sh/install | bash
-fi
 
 # eas-cli
 if is_installed eas; then
