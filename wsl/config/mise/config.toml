@@ -15,9 +15,10 @@ rust = "latest"
 delta = "latest"
 lazygit = "latest"
 
-# File managers & TUI tools  
+# File managers & TUI tools
 lazydocker = "latest"
 yazi = "latest"
+bottom = "latest"
 # Note: lazysql is installed via go install in 07-misc.sh (not in mise registry)
 
 # CLI utilities (replacing apt/cargo installs)
@@ -27,6 +28,11 @@ ripgrep = "latest"
 bat = "latest"
 eza = "latest"
 fd = "latest"
+sd = "latest"
+tldr = "latest"
+
+# Prompt
+starship = "latest"
 
 # Editor - pinned to specific version
 neovim = "0.11.3"

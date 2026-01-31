@@ -1,6 +1,7 @@
 #!/bin/bash
-# Install utilities via apt: btop, tree, tldr, unzip, fastfetch
-# Note: bat, eza, fzf, ripgrep, fd, zoxide are now installed via mise in 00-prerequisites.sh
+# Install utilities via apt: unzip, fastfetch
+# Note: bat, eza, fzf, ripgrep, fd, zoxide, bottom, sd, tldr are now installed via mise in 00-prerequisites.sh
+# Note: tree is replaced by eza --tree
 
 set -e
 
@@ -21,31 +22,6 @@ else
     echo -e "${GREEN}[INSTALL]${NC} unzip"
     sudo apt update
     sudo apt install -y unzip
-fi
-
-# btop
-if is_installed btop; then
-    echo -e "${YELLOW}[SKIP]${NC} btop already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} btop"
-    sudo apt update
-    sudo apt install -y btop
-fi
-
-# tree
-if is_installed tree; then
-    echo -e "${YELLOW}[SKIP]${NC} tree already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} tree"
-    sudo apt install -y tree
-fi
-
-# tldr
-if is_installed tldr; then
-    echo -e "${YELLOW}[SKIP]${NC} tldr already installed"
-else
-    echo -e "${GREEN}[INSTALL]${NC} tldr"
-    sudo apt install -y tldr
 fi
 
 # fastfetch

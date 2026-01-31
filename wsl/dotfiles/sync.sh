@@ -16,9 +16,8 @@ echo "Syncing dotfiles to $HOME_DIR..."
 cp "$SCRIPT_DIR/.gitconfig" "$HOME_DIR/.gitconfig"
 echo "  - .gitconfig"
 
-mkdir -p "$HOME_DIR/.config/ohmyposh"
-cp "$SCRIPT_DIR/ohmyposh/"* "$HOME_DIR/.config/ohmyposh/"
-echo "  - ohmyposh config"
+cp "$SCRIPT_DIR/starship/starship.toml" "$HOME_DIR/.config/starship.toml"
+echo "  - starship config"
 
 # Mise config (symlink to keep in sync)
 MISE_CONFIG_SRC="$SCRIPT_DIR/../config/mise/config.toml"

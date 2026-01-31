@@ -1,0 +1,114 @@
+palette = 'theme'
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$rust\
+$golang\
+$dotnet\
+$java\
+$ruby\
+$php\
+$lua\
+$line_break\
+$character"""
+
+right_format = '$cmd_duration'
+
+[username]
+style_user = 'fg:muted'
+style_root = 'bold fg:prompt_error'
+format = '[$user]($style)'
+show_always = true
+
+[hostname]
+style = 'fg:muted'
+format = '[@$hostname]($style) '
+ssh_only = false
+
+[directory]
+style = 'bold fg:path'
+truncation_length = 0
+truncate_to_repo = false
+
+[git_branch]
+style = 'fg:git_branch'
+format = ' [$branch]($style)'
+
+[git_status]
+style = 'fg:git_status'
+format = '[$all_status$ahead_behind]($style)'
+ahead = '⇡'
+behind = '⇣'
+modified = '*'
+staged = '*'
+
+[python]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[nodejs]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[rust]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[golang]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[dotnet]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[java]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[ruby]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[php]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[lua]
+style = 'fg:runtime'
+format = ' [$symbol$version]($style)'
+symbol = ' '
+
+[cmd_duration]
+style = 'fg:duration'
+min_time = 1_000
+format = '[$duration]($style)'
+
+[character]
+success_symbol = '[❯](fg:prompt)'
+error_symbol = '[❯](fg:prompt_error)'
+
+[palettes.theme]
+# Semantic colors - updated by set-theme.sh
+path = '#b4befe'
+prompt = '#fab387'
+prompt_error = '#f38ba8'
+git_branch = '#6c7086'
+git_status = '#94e2d5'
+duration = '#f9e2af'
+muted = '#6c7086'
+runtime = '#6c7086'

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Install shell tools: zsh, oh-my-posh
-# Note: git-delta is now installed via mise in 00-prerequisites.sh
+# Install shell tools: git, zsh
+# Note: git-delta, starship are installed via mise in 00-prerequisites.sh
 
 set -e
 
@@ -14,6 +14,15 @@ is_installed() {
 
 echo "Installing shell tools..."
 
+# git
+if is_installed git; then
+    echo -e "${YELLOW}[SKIP]${NC} git already installed"
+else
+    echo -e "${GREEN}[INSTALL]${NC} git"
+    sudo apt update
+    sudo apt install -y git
+fi
+
 # zsh
 if is_installed zsh; then
     echo -e "${YELLOW}[SKIP]${NC} zsh already installed"
@@ -23,12 +32,12 @@ else
     sudo apt install -y zsh
 fi
 
-# oh-my-posh
-if is_installed oh-my-posh; then
-    echo -e "${YELLOW}[SKIP]${NC} oh-my-posh already installed"
+# Set zsh as default shell
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo -e "${GREEN}[SET]${NC} zsh as default shell"
+    sudo chsh -s "$(which zsh)" "$USER"
 else
-    echo -e "${GREEN}[INSTALL]${NC} oh-my-posh"
-    curl -s https://ohmyposh.dev/install.sh | bash -s
+    echo -e "${YELLOW}[SKIP]${NC} zsh already default shell"
 fi
 
 echo "Shell tools installation complete!"
