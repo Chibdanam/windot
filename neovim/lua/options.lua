@@ -122,30 +122,12 @@ vim.opt.ignorecase = true
 -- [[ Intégration Système ]]
 --  Options qui connectent Neovim au système d'exploitation.
 --
---  Bind le clipboard de nvim à celui de Windows/Linux/Mac
+--  Bind le clipboard de nvim à celui du système Linux
 --  Permet de copier/coller entre Neovim et d'autres applications avec y (yank) et p (paste)
 --
---  NOTE: Nécessite un clipboard provider (xclip, xsel, pbcopy, ou win32yank selon l'OS)
---  WARN: Sur Windows via WSL, assurez-vous que win32yank.exe est installé
+--  NOTE: Nécessite un clipboard provider (xclip ou xsel)
 --  Voir :help 'clipboard' et :checkhealth pour vérifier votre clipboard provider
 vim.opt.clipboard = "unnamedplus"
-
--- WSL Clipboard Fix
--- Configure explicit clipboard providers for WSL to avoid Wayland errors
-if vim.fn.has("wsl") == 1 then
-  vim.g.clipboard = {
-    name = "WslClipboard",
-    copy = {
-      ["+"] = "clip.exe",
-      ["*"] = "clip.exe",
-    },
-    paste = {
-      ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-      ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    },
-    cache_enabled = 0,
-  }
-end
 
 -- [[ Apparence - Couleurs ]]
 --  Active le support des couleurs 24-bit (true colors) dans le terminal.

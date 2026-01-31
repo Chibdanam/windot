@@ -1,5 +1,5 @@
 #!/bin/bash
-# WSL Install Script - select and run install scripts via fzf (or fallback menu)
+# Install Script - select and run install scripts via fzf (or fallback menu)
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RUN_DIR="$SCRIPT_DIR/run"

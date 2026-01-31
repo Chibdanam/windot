@@ -20,7 +20,6 @@
     lua/plugins/
     ├── lsp-config.lua      - Configuration LSP (Mason, LSPConfig)
     ├── roslyn.lua          - Serveur LSP C# moderne (Roslyn)
-    ├── rzls.lua            - Serveur LSP Razor/Blazor (rzls)
     ├── telescope.lua       - Recherche floue
     ├── treesitter.lua      - Analyse syntaxique
     ├── neotree.lua         - Explorateur de fichiers

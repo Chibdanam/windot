@@ -27,12 +27,12 @@ fi
 # Ensure mise config is in place
 MISE_CONFIG_DIR="$HOME/.config/mise"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-WINDOT_MISE_CONFIG="$SCRIPT_DIR/../../../wsl/config/mise/config.toml"
+MISE_CONFIG_SRC="$SCRIPT_DIR/../../mise/config.toml"
 
-if [ -f "$WINDOT_MISE_CONFIG" ]; then
+if [ -f "$MISE_CONFIG_SRC" ]; then
     mkdir -p "$MISE_CONFIG_DIR"
-    if [ ! -L "$MISE_CONFIG_DIR/config.toml" ] || [ "$(readlink -f "$MISE_CONFIG_DIR/config.toml")" != "$(readlink -f "$WINDOT_MISE_CONFIG")" ]; then
-        ln -sf "$(readlink -f "$WINDOT_MISE_CONFIG")" "$MISE_CONFIG_DIR/config.toml"
+    if [ ! -L "$MISE_CONFIG_DIR/config.toml" ] || [ "$(readlink -f "$MISE_CONFIG_DIR/config.toml")" != "$(readlink -f "$MISE_CONFIG_SRC")" ]; then
+        ln -sf "$(readlink -f "$MISE_CONFIG_SRC")" "$MISE_CONFIG_DIR/config.toml"
         echo -e "${GREEN}[LINK]${NC} mise config symlinked"
     else
         echo -e "${YELLOW}[SKIP]${NC} mise config already linked"

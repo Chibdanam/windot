@@ -31,9 +31,7 @@
     • <Esc>          : Fermer Telescope
 
   NOTE: Telescope utilise ripgrep (rg) pour live_grep. Assurez-vous qu'il est installé !
-        Sur Windows : winget install BurntSushi.ripgrep.MSVC
-        Sur Linux : sudo apt install ripgrep
-        Sur Mac : brew install ripgrep
+        Sur Linux : sudo apt install ripgrep (ou via mise)
 
   Voir :help telescope.nvim pour la documentation complète
 --]]

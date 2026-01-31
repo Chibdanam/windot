@@ -9,19 +9,6 @@ f() {
     fi
 }
 
-# Fuzzy directory finder - cd into selected directory (top-level Windows home folders only)
-fw() {
-    local win_user=$(cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r')
-    local win_home="/mnt/c/Users/$win_user"
-    local dir
-    dir=$(fd --type d --max-depth 1 --base-directory "$win_home" | \
-    fzf --preview "eza --tree --level=1 --color=always $win_home/{}" \
-        --bind 'ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up')
-    if [ -n "$dir" ]; then
-        cd "$win_home/$dir"
-    fi
-}
-
 # Fuzzy directory finder (deep) - cd into selected directory (including subfolders)
 fdd() {
     local dir

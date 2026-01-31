@@ -26,7 +26,7 @@
     end
 
   NOTE: Treesitter télécharge automatiquement les parseurs pour chaque langage.
-        Les parseurs sont des fichiers .so (Linux) ou .dll (Windows) compilés.
+        Les parseurs sont des fichiers .so compilés.
 
   Voir :help nvim-treesitter pour la documentation complète
 --]]
@@ -34,17 +34,6 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     config = function()
-        -- [[ Configuration Spéciale Windows ]]
-        --  prefer_git = false : Utilise curl au lieu de git pour télécharger les parseurs
-        --
-        --  POURQUOI ?
-        --  Sur Windows, git peut causer des problèmes avec les fins de ligne (CRLF vs LF)
-        --  ou des conflits avec les fichiers compilés (.dll). Cette option contourne le problème.
-        --
-        --  NOTE: Cette option est nécessaire sur Windows mais ne cause pas de problèmes sur Linux/Mac
-        --  Voir :help nvim-treesitter-install
-        require 'nvim-treesitter.install'.prefer_git = false
-
         require("nvim-treesitter.configs").setup({
             -- [[ Installation des Parseurs ]]
             --  Liste des parseurs à installer automatiquement au premier lancement.

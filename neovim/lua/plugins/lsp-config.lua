@@ -84,7 +84,6 @@ return {
         'williamboman/mason.nvim',
         lazy = false, -- Charger immédiatement (ne pas lazy-load)
         config = function()
-            -- Configuration de Mason avec registres personnalisés
             -- NOTE: Le registre Crashdummyy est nécessaire pour installer Roslyn (serveur C#)
             require('mason').setup({
                 registries = {

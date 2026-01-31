@@ -1,4 +1,4 @@
-# Mise configuration for WSL environment
+# Mise global tool configuration
 # This file is symlinked to ~/.config/mise/config.toml
 
 [tools]
@@ -10,6 +10,7 @@ bun = "latest"
 # Languages/runtimes
 go = "latest"
 rust = "latest"
+dotnet = "latest"
 
 # Git tools
 delta = "latest"
@@ -35,7 +36,7 @@ tldr = "latest"
 starship = "latest"
 
 # Editor - pinned to specific version
-neovim = "0.11.3"
+neovim = "latest"
 
 [settings]
 # Automatically install tools when entering a directory with a mise config
