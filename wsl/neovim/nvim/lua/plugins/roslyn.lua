@@ -1,6 +1,6 @@
 --[[
 ============================================================================================
-    ROSLYN.NVIM - SERVEUR LSP C# MODERNE
+    ROSLYN.NVIM - SERVEUR LSP C# MODERNE + RAZOR/BLAZOR (COHOSTING)
 ============================================================================================
 
   QU'EST-CE QUE ROSLYN ?
@@ -17,6 +17,11 @@
     • Gestion intelligente de multiples solutions (.sln)
     • Actions de code avancées (Fix All, nested code actions)
 
+  SUPPORT RAZOR/BLAZOR (COHOSTING) :
+    Depuis fin 2025, roslyn.nvim intègre directement le support Razor/CSHTML via
+    le mécanisme de co-hosting. Cela remplace l'ancien plugin rzls.nvim (archivé).
+    Plus besoin de plugin séparé ni de handlers spéciaux pour Razor.
+
   PRÉREQUIS :
     • Neovim >= 0.11.0
     • .NET SDK installé avec la commande `dotnet` disponible
@@ -26,17 +31,7 @@
     1. Redémarrez Neovim après avoir ajouté ce fichier
     2. Le registre Mason personnalisé sera configuré automatiquement
     3. Exécutez :MasonInstall roslyn
-       OU :MasonInstall roslyn-unstable (pour les fonctionnalités de pointe)
     4. Le serveur sera téléchargé et configuré automatiquement
-
-  FONCTIONNALITÉS PRINCIPALES :
-    • Autocomplétion intelligente C#
-    • Navigation dans le code (aller à la définition, références)
-    • Diagnostics en temps réel (erreurs, warnings)
-    • Actions de code (refactoring, quick fixes)
-    • Support des inlay hints (types implicites, paramètres)
-    • Code lens (références, tests)
-    • Support multi-solutions (switch entre différents .sln)
 
   COMMANDES ROSLYN :
     :Roslyn start    - Démarre le serveur Roslyn
@@ -44,135 +39,87 @@
     :Roslyn restart  - Redémarre le serveur Roslyn
     :Roslyn target   - Change de solution .sln (si plusieurs dans le projet)
 
-  NOTE: Roslyn ne supporte PAS les fichiers Razor (.razor, .cshtml).
-        Pour Razor, utilisez le plugin rzls.nvim en complément.
-
   Voir :help roslyn.nvim pour plus d'informations
 --]]
 
 return {
-    "seblj/roslyn.nvim",
-    -- NOTE: Roslyn utilise le système de filetype pour se déclencher sur les fichiers .cs
-    ft = "cs",
+    "seblyng/roslyn.nvim",
 
-    config = function()
-        -- [[ Configuration de Roslyn ]]
-        --  Configuration par défaut avec des options sensibles.
-        --  Personnalisez selon vos besoins en décommentant les options ci-dessous.
+    -- Roslyn se déclenche sur les fichiers C# et Razor/CSHTML (cohosting)
+    ft = { "cs", "razor" },
 
-        require("roslyn").setup({
-            -- [[ Options de Base ]]
+    ---@module 'roslyn.config'
+    ---@type RoslynNvimConfig
+    opts = {
+        -- Gestion du file watching (surveillance des changements de fichiers)
+        -- "auto" : laisse Roslyn décider (recommandé)
+        -- "roslyn" : désactive le filewatching côté Neovim
+        -- "off" : désactive toute surveillance (économise des ressources)
+        filewatching = "auto",
 
-            -- Gestion du file watching (surveillance des changements de fichiers)
-            -- "auto" : laisse Roslyn décider (recommandé)
-            -- true   : Roslyn surveille les changements
-            -- false  : Désactive la surveillance (économise des ressources)
-            filewatching = "auto",
+        -- Recherche élargie : cherche les .sln dans les dossiers parents
+        broad_search = false,
 
-            -- Recherche élargie : cherche les .sln dans les dossiers parents
-            -- Si false, utilise seulement le dossier de travail actuel
-            -- TIP: Activez si vos .sln sont dans des dossiers parents
-            broad_search = false,
+        -- Verrouille la solution sélectionnée après le premier attachement
+        lock_target = false,
 
-            -- Verrouille la solution sélectionnée après le premier attachement
-            -- Utile si vous avez plusieurs .sln et voulez rester sur une seule
-            lock_target = false,
+        -- Mode silencieux : désactive les notifications d'initialisation
+        silent = false,
+    },
 
-            -- Mode silencieux : désactive les notifications d'initialisation
-            -- Si true, Roslyn démarre sans afficher de messages
-            silent = false,
+    config = function(_, opts)
+        -- [[ Configuration LSP pour Roslyn ]]
+        -- vim.lsp.config configure les paramètres du serveur LSP (settings, on_attach, etc.)
+        -- Ces réglages sont séparés des options du plugin roslyn.nvim
+        vim.lsp.config("roslyn", {
+            settings = {
+                -- [[ Inlay Hints - Indices visuels inline ]]
+                ["csharp|inlay_hints"] = {
+                    csharp_enable_inlay_hints_for_implicit_object_creation = true,
+                    csharp_enable_inlay_hints_for_implicit_variable_types = true,
+                    csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+                    csharp_enable_inlay_hints_for_types = true,
+                    dotnet_enable_inlay_hints_for_indexer_parameters = true,
+                    dotnet_enable_inlay_hints_for_literal_parameters = true,
+                    dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+                    dotnet_enable_inlay_hints_for_other_parameters = true,
+                    dotnet_enable_inlay_hints_for_parameters = true,
+                    dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+                    dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+                    dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+                },
 
-            -- [[ Configuration Avancée ]]
-            -- Configuration LSP avec handlers pour rzls (support Razor/Blazor)
-            --
-            -- NOTE: rzls.nvim nécessite que Roslyn utilise ses handlers spéciaux
-            --       pour communiquer avec le serveur Razor Language Server.
-            --       Si vous n'utilisez pas Razor/Blazor, vous pouvez commenter cette section.
-            config = {
-                -- Handlers personnalisés pour l'intégration avec rzls
-                -- Ces handlers permettent à Roslyn de traiter les requêtes spécifiques à Razor
-                handlers = require("rzls.roslyn_handlers"),
+                -- [[ Code Lens - Références et tests inline ]]
+                ["csharp|code_lens"] = {
+                    dotnet_enable_references_code_lens = true,
+                    dotnet_enable_tests_code_lens = true,
+                },
 
-                -- Décommentez pour ajouter d'autres configurations :
-                -- capabilities = require('cmp_nvim_lsp').default_capabilities(),
+                -- [[ Complétion ]]
+                ["csharp|completion"] = {
+                    dotnet_provide_regex_completions = true,
+                    dotnet_show_completion_items_from_unimported_namespaces = true,
+                    dotnet_show_name_completion_suggestions = true,
+                },
+
+                -- [[ Analyse en arrière-plan ]]
+                ["csharp|background_analysis"] = {
+                    dotnet_analyzer_diagnostics_scope = "fullSolution",
+                    dotnet_compiler_diagnostics_scope = "fullSolution",
+                },
+
+                -- [[ Recherche de symboles ]]
+                ["csharp|symbol_search"] = {
+                    dotnet_search_reference_assemblies = true,
+                },
+
+                -- [[ Formatage ]]
+                ["csharp|formatting"] = {
+                    dotnet_organize_imports_on_format = true,
+                },
             },
-
-            -- [[ Inlay Hints - Indices Visuels ]]
-            --  Les inlay hints affichent des informations supplémentaires dans l'éditeur
-            --  comme les types de variables implicites ou les noms de paramètres.
-            --
-            --  Décommentez pour activer :
-            --
-            -- on_attach = function(client, bufnr)
-            --     -- Active les inlay hints pour ce buffer
-            --     if client.server_capabilities.inlayHintProvider then
-            --         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-            --     end
-            -- end,
         })
 
-        -- [[ Configuration des Inlay Hints via vim.lsp.config ]]
-        --  Alternative pour configurer les inlay hints globalement pour Roslyn.
-        --  Décommentez pour personnaliser :
-        --
-        -- vim.lsp.config("roslyn", {
-        --     settings = {
-        --         ["csharp|inlay_hints"] = {
-        --             csharp_enable_inlay_hints_for_implicit_variable_types = true,
-        --             csharp_enable_inlay_hints_for_lambda_parameter_types = true,
-        --             csharp_enable_inlay_hints_for_types = true,
-        --             dotnet_enable_inlay_hints_for_parameters = true,
-        --             dotnet_enable_inlay_hints_for_literal_parameters = true,
-        --             dotnet_enable_inlay_hints_for_object_creation_parameters = true,
-        --             dotnet_enable_inlay_hints_for_indexer_parameters = true,
-        --             dotnet_enable_inlay_hints_for_other_parameters = true,
-        --             dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
-        --             dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
-        --             dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
-        --         },
-        --         ["csharp|code_lens"] = {
-        --             dotnet_enable_references_code_lens = true,
-        --             dotnet_enable_tests_code_lens = true,
-        --         },
-        --     },
-        -- })
+        require("roslyn").setup(opts)
     end,
 }
-
--- [[ TODO: Améliorations Roslyn ]]
---
---  PLUGINS COMPLÉMENTAIRES POUR C# :
---    • rzls.nvim              - Support des fichiers Razor (.cshtml, .razor)
---    • nvim-dap               - Débogueur pour C# avec netcoredbg ou vsdbg
---    • neotest-dotnet         - Exécution de tests C# dans Neovim
---
---  CONFIGURATION AVANCÉE :
---    • Personnaliser les inlay hints selon vos préférences
---    • Configurer les code lens pour afficher les références et tests
---    • Ajouter des snippets C# personnalisés
---    • Configurer le formateur (stylecop, csharpier, etc.)
---
---  GESTION MULTI-SOLUTIONS :
---    Si votre projet contient plusieurs fichiers .sln :
---      1. Ouvrez un fichier .cs
---      2. Exécutez :Roslyn target
---      3. Sélectionnez la solution à utiliser
---      4. Roslyn se reconnectera avec la bonne solution
---
---  DÉPANNAGE :
---    • Si Roslyn ne démarre pas : Vérifiez que dotnet est installé avec `dotnet --version`
---    • Si les diagnostics ne s'affichent pas : Exécutez :LspInfo pour voir l'état
---    • Si l'autocomplétion ne fonctionne pas : Vérifiez que vous avez un plugin de complétion (nvim-cmp)
---    • Consultez les logs : :Roslyn restart et vérifiez :messages
---
---  COMMANDES UTILES :
---    :LspInfo                 - Affiche l'état de tous les serveurs LSP
---    :LspRestart              - Redémarre tous les serveurs LSP
---    :Mason                   - Ouvre l'interface Mason pour gérer Roslyn
---
---  NOTE: Pour vérifier que Roslyn est bien installé :
---    1. Exécutez :Mason
---    2. Cherchez "roslyn" dans la liste
---    3. Il devrait être marqué comme installé
---
---  Voir https://github.com/seblj/roslyn.nvim pour la documentation complète

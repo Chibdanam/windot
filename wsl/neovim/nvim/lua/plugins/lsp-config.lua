@@ -103,14 +103,12 @@ return {
     --
     --  SERVEURS ACTUELLEMENT INSTALLÉS :
     --    • lua_ls     - Serveur LSP pour Lua (utile pour configurer Neovim)
-    --    • csharp_ls  - Serveur LSP léger pour C#
-    --    • html       - Serveur LSP pour HTML (requis pour rzls/Razor)
+    --    • html       - Serveur LSP pour HTML
     --
     --  NOTE: Roslyn (pour C#) n'est PAS dans cette liste car il est géré par roslyn.nvim
-    --        (voir lua/plugins/roslyn.lua) et non par lspconfig standard.
+    --        (voir lua/plugins/roslyn.lua). Roslyn inclut aussi le support Razor via cohosting.
     --
-    --  NOTE: rzls (pour Razor/Blazor) n'est PAS dans cette liste car il est géré par rzls.nvim
-    --        (voir lua/plugins/rzls.lua) et nécessite une configuration spéciale avec roslyn.
+    --  NOTE: csharp_ls n'est plus utilisé car il entre en conflit avec Roslyn.
     --
     --  NOTE: Si vous ajoutez un serveur ici, redémarrez Neovim pour qu'il soit installé
     --  Voir :help mason-lspconfig.nvim
@@ -118,7 +116,7 @@ return {
         'williamboman/mason-lspconfig.nvim',
         config = function()
             require('mason-lspconfig').setup({
-                ensure_installed = { 'lua_ls', 'csharp_ls', 'html' }
+                ensure_installed = { 'lua_ls', 'html' }
             })
         end
     },
@@ -147,14 +145,10 @@ return {
             -- Active lua_ls pour les fichiers .lua (configuration de Neovim)
             vim.lsp.enable('lua_ls')
 
-            -- Active csharp_ls pour les fichiers .cs (C# léger et rapide)
-            vim.lsp.enable('csharp_ls')
-
-            -- Active html pour les fichiers .html (et requis pour les fichiers Razor)
+            -- Active html pour les fichiers .html
             vim.lsp.enable('html')
 
-            -- NOTE: Roslyn (C# moderne) est configuré dans lua/plugins/roslyn.lua (plugin dédié)
-            -- NOTE: rzls (Razor/Blazor) est configuré dans lua/plugins/rzls.lua (plugin dédié)
+            -- NOTE: Roslyn (C# + Razor via cohosting) est configuré dans lua/plugins/roslyn.lua
 
             -- [[ Keybindings LSP ]]
             --  Ces raccourcis clavier permettent d'interagir avec le serveur LSP actif.
