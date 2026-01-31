@@ -30,7 +30,6 @@ bat = "latest"
 eza = "latest"
 fd = "latest"
 sd = "latest"
-tldr = "latest"
 
 # Prompt
 starship = "latest"
