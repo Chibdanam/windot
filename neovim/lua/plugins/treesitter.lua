@@ -34,76 +34,9 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     config = function()
-        require("nvim-treesitter.configs").setup({
-            -- [[ Installation des Parseurs ]]
-            --  Liste des parseurs à installer automatiquement au premier lancement.
-            --
-            --  PARSEURS ACTUELLEMENT INSTALLÉS :
-            --    • c       - Langage C (utile pour comprendre le code C dans Neovim)
-            --    • lua     - Lua (pour configurer Neovim)
-            --    • vim     - Vimscript (ancien langage de config Vim)
-            --    • vimdoc  - Documentation Vim/Neovim (pour :help)
-            --    • query   - Langage de requête Treesitter (pour customiser les queries)
-            --
-            --  TODO: Ajoutez les langages que vous utilisez :
-            --    "python", "javascript", "typescript", "rust", "go", "html", "css", "json", etc.
-            --
-            --  NOTE: Vous pouvez voir tous les parseurs disponibles avec :TSInstallInfo
+        require("nvim-treesitter").setup({
             ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
-
-            -- Installation automatique des parseurs manquants
-            -- Quand vous ouvrez un fichier dans un nouveau langage, le parseur sera installé automatiquement
-            --
-            -- WARN: Nécessite git ou curl installé sur le système
             auto_install = true,
-
-            -- [[ Module : Coloration Syntaxique (Highlight) ]]
-            --  Active la coloration syntaxique basée sur Treesitter.
-            --  Remplace l'ancien système de coloration basé sur regex.
-            --
-            --  AVANTAGES :
-            --    • Plus précis et contextuel
-            --    • Supporte les injections de langage (ex: SQL dans Python, JS dans HTML)
-            --    • Performances optimales même sur de gros fichiers
-            --
-            --  NOTE: Si la coloration semble cassée, exécutez :TSUpdate pour mettre à jour les parseurs
-            --  Voir :help treesitter-highlight
-            highlight = {
-                enable = true,
-            },
-
-            -- [[ Module : Sélection Incrémentale ]]
-            --  Permet de sélectionner intelligemment du code en se basant sur l'arbre syntaxique.
-            --  Au lieu de sélectionner caractère par caractère, vous sélectionnez des "nœuds" logiques.
-            --
-            --  WORKFLOW TYPIQUE :
-            --    1. Placez le curseur dans une fonction
-            --    2. Appuyez sur <leader>ss (start selection) : sélectionne le mot sous le curseur
-            --    3. Appuyez sur <leader>si (increment) : sélectionne la ligne, puis le bloc, puis la fonction
-            --    4. Appuyez sur <leader>sd (decrement) : revient à la sélection précédente
-            --
-            --  EXEMPLE CONCRET :
-            --    Curseur sur "x" :  x = 10
-            --    <leader>ss     →  [x] est sélectionné (identifiant)
-            --    <leader>si     →  [x = 10] est sélectionné (assignation)
-            --    <leader>si     →  toute la ligne est sélectionnée
-            --    <leader>si     →  tout le bloc/fonction est sélectionné
-            --
-            --  TIP: Extrêmement utile pour refactorer ou copier des blocs de code complets
-            --  Voir :help nvim-treesitter-incremental-selection-mod
-            incremental_selection = {
-                enable = true,
-                keymaps = {
-                    -- Démarre la sélection (Select Start)
-                    init_selection = "<leader>ss",
-                    -- Augmente la sélection au nœud parent (Select Increment)
-                    node_incremental = "<leader>si",
-                    -- Augmente au niveau du scope (fonction, classe, etc.) (Select sCope)
-                    scope_incremental = "<leader>sc",
-                    -- Diminue la sélection au nœud enfant (Select Decrement)
-                    node_decremental = "<leader>sd",
-                },
-            },
         })
     end,
 }
