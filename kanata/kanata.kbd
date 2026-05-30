@@ -1,35 +1,93 @@
-;; CapsLock as Ctrl when held, Esc when tapped. Holding either Shift
-;; while pressing CapsLock emits a real Caps Lock keypress (toggles
-;; Windows' Caps Lock state) — the only way to reach Caps Lock now
-;; that the bare key is remapped.
+;; CapsLock → Esc.
+;; Shift+CapsLock → real Caps Lock.
+;; Home-row mods on qsdf / uiop — toggle by holding both Shifts ~3 s.
 ;;
 ;; Launched by GlazeWM's startup_commands. Uses the WinIOv2 backend (no
-;; admin, no interception driver) — scoop's `kanata` shim points at the
-;; `kanata_windows_tty_winIOv2_x64.exe` binary by default.
+;; admin, no interception driver).
 
 (defcfg
-  process-unmapped-keys yes
+  process-unmapped-keys (all-except lctl ralt)
+  concurrent-tap-hold yes
 )
 
 (defsrc
-  caps lsft rsft
+  ;; Key names are QWERTY scancodes, not AZERTY labels.
+  ;; AZERTY q sits at QWERTY a position.
+  caps a s d f u i o p lsft rsft
+)
+
+;; Streak detection + per-finger hold timeout.
+;; If typing fast (3rd-most-recent key <200ms ago), output the letter.
+;; Otherwise use tap-hold-release-timeout with per-finger patience.
+(deftemplate hrm (char mod hold-time)
+  (switch
+    ((key-timing 3 less-than 200)) $char break
+    () (tap-hold-release-timeout 200 $hold-time $char $mod $char) break
+  )
+)
+
+;; Same as hrm but uses tap-hold so the modifier fires on hold alone
+;; (no second keypress needed). Required for meta/Win — standalone hold
+;; opens the Start menu.
+(deftemplate hrm-standalone (char mod hold-time)
+  (switch
+    ((key-timing 3 less-than 200)) $char break
+    () (tap-hold $hold-time $hold-time $char $mod) break
+  )
 )
 
 (defalias
-  cap (tap-hold 200 200 esc lctl)
-  ;; Shift keys still emit shift, but ALSO push the `shifted` layer onto
-  ;; the active stack while held. That layer rewrites `caps` to emit a
-  ;; literal Caps Lock keypress. The defchordsv2 alternative would have
-  ;; added a chord-timeout latency to every standalone caps tap, so
-  ;; we use a layer overlay instead — zero latency on caps-alone.
-  lsft+ (multi lsft (layer-while-held shifted))
-  rsft+ (multi rsft (layer-while-held shifted))
+  ;; CapsLock → Esc
+  caps-esc esc
+
+  ;; Home-row mods (AZERTY left: qsdf  right: uiop)
+  ;; meta / alt / shift / ctrl — ctrl / shift / alt / meta
+  ;; Hold timeout per finger: pinky 450ms, ring 400ms, middle 300ms, index 300ms
+  ;; Meta keys (q/p) use hrm-standalone so holding alone triggers Win (Start menu)
+  q-meta  (t! hrm-standalone a lmet 350)
+  s-alt   (t! hrm s lalt 300)
+  d-shift (t! hrm d lsft 300)
+  f-ctrl  (t! hrm f lctl 300)
+  u-ctrl  (t! hrm u rctl 300)
+  i-shift (t! hrm i rsft 300)
+  o-alt   (t! hrm o lalt 300)
+  p-meta  (t! hrm-standalone p rmet 350)
+
+  ;; Shift + layer overlay so Shift+CapsLock → real Caps Lock
+  lsft-base  (multi lsft (layer-while-held shifted))
+  rsft-base  (multi rsft (layer-while-held shifted))
+  lsft-plain (multi lsft (layer-while-held no-hrm-shifted))
+  rsft-plain (multi rsft (layer-while-held no-hrm-shifted))
+
+  ;; Toggle HRM: hold both Shifts ~3 s to switch layer.
+  ;; Short press (<3 s) emits a normal shift.
+  toggle-hrm (tap-hold 3000 3000 lsft
+    (switch
+      ((layer base))    (layer-switch no-hrm) break
+      ((layer shifted)) (layer-switch no-hrm) break
+      ()                (layer-switch base)   break
+    )
+  )
 )
 
 (deflayer base
-  @cap @lsft+ @rsft+
+  @caps-esc @q-meta @s-alt @d-shift @f-ctrl
+  @u-ctrl @i-shift @o-alt @p-meta
+  @lsft-base @rsft-base
+)
+
+(deflayer no-hrm
+  @caps-esc q s d f u i o p @lsft-plain @rsft-plain
 )
 
 (deflayer shifted
-  caps _    _
+  caps _ _ _ _ _ _ _ _ _ _
+)
+
+(deflayer no-hrm-shifted
+  caps _ _ _ _ _ _ _ _ _ _
+)
+
+(defchordsv2
+  (lsft rsft) @toggle-hrm 200 all-released ()
 )
